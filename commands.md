@@ -13,10 +13,6 @@ head -5 bc_localtarget_antistall_9of50/policy/best.pt
 ```
 
 ```bash
-git lfs pull
-```
-
-```bash
 find bc_localtarget_antistall_9of50/datasets -type f \( -name "*.hdf5" -o -name "*.h5" \) -exec ls -lh {} \;
 ```
 
@@ -28,26 +24,6 @@ grep -R "FINAL PHYSICAL STACK SUCCESS=True" \
 ```bash
 grep -R "FINAL PHYSICAL STACK SUCCESS=False" \
   bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_*.log | wc -l
-```
-
-```bash
-grep -Rl "FINAL PHYSICAL STACK SUCCESS=True" \
-  bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_*.log | sort
-```
-
-```bash
-grep -n "FINAL PHYSICAL STACK SUCCESS\|TARGET BC STEP\|guard=\|xy_gap\|z_gap" \
-  bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_4.log | tail -120
-```
-
-```bash
-grep -R "FINAL PHYSICAL STACK SUCCESS=True" \
-  bc_localtarget_antistall_9of50/eval/localtarget_antistall_10x_eval_20260619_162950/run_*.log | wc -l
-```
-
-```bash
-grep -Rl "FINAL PHYSICAL STACK SUCCESS=True" \
-  bc_localtarget_antistall_9of50/eval/localtarget_antistall_10x_eval_20260619_162950/run_*.log | sort
 ```
 
 ```bash
@@ -81,14 +57,4 @@ echo "$LATEST"
 
 grep -R "FINAL PHYSICAL STACK SUCCESS=True" "$LATEST"/run_*.log | wc -l
 grep -R "FINAL PHYSICAL STACK SUCCESS=False" "$LATEST"/run_*.log | wc -l
-grep -Rl "FINAL PHYSICAL STACK SUCCESS=True" "$LATEST"/run_*.log | sort
-```
-
-```bash
-git lfs install
-git lfs track "*.pt"
-git lfs track "*.pth"
-git lfs track "*.hdf5"
-git add .gitattributes
-git lfs ls-files
 ```
