@@ -11,15 +11,17 @@ runs/
 videos/
 /logs/
 
-# Video files — never commit
+# Video files — intentionally not committed
 *.mp4
 *.webm
 *.mov
 *.avi
 
-# Do NOT ignore eval and training logs for the BC policy package
-!bc_localtarget_antistall_9of50/eval/**/*.log
-!bc_localtarget_antistall_9of50/eval/**/
-!bc_localtarget_antistall_9of50/logs/**/*.log
-!bc_localtarget_antistall_9of50/logs/**/
+# Do NOT ignore log files inside the BC policy package
 !bc_localtarget_antistall_9of50/
+!bc_localtarget_antistall_9of50/eval/
+!bc_localtarget_antistall_9of50/eval/**/
+!bc_localtarget_antistall_9of50/eval/**/*.log
+!bc_localtarget_antistall_9of50/logs/
+!bc_localtarget_antistall_9of50/logs/**/
+!bc_localtarget_antistall_9of50/logs/**/*.log
