@@ -1,0 +1,17 @@
+Place the relevant .hdf5 dataset files here.
+
+All .hdf5 files are tracked by Git LFS (*.hdf5 pattern in .gitattributes).
+
+Source: See /tmp/bc_policy_copylist.txt.clean on the local machine for the exact list
+        of .hdf5 files referenced for the BC localtarget antistall training run.
+
+Typically these are the demonstration datasets used for training
+bc_rnn_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch.
+
+Include ONLY the relevant .hdf5 files for this policy. Do not include unrelated datasets.
+
+To add from your local machine:
+  cp <source>.hdf5 bc_localtarget_antistall_9of50/datasets/
+  git add bc_localtarget_antistall_9of50/datasets/*.hdf5
+  git commit -m "Add BC training datasets via LFS"
+  git push

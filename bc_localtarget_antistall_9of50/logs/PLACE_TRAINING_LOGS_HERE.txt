@@ -1,0 +1,22 @@
+Place important training/play/collection logs here.
+
+Source: See /tmp/bc_policy_copylist.txt.clean on the local machine.
+
+Include ONLY the logs relevant to this policy:
+  - Training log for bc_rnn_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch
+  - Play/collection logs used to generate the 60 demonstration dataset
+  - Any relevant anti-stall guard tuning logs
+
+Do NOT include:
+  - Logs from unrelated failed runs
+  - Random IsaacLab output
+  - Cache or temp files
+
+Log files in this directory are NOT ignored by .gitignore (see negation rule for
+bc_localtarget_antistall_9of50/logs/**/*.log).
+
+To add from your local machine:
+  cp <log>.log bc_localtarget_antistall_9of50/logs/
+  git add bc_localtarget_antistall_9of50/logs/
+  git commit -m "Add BC policy training logs"
+  git push

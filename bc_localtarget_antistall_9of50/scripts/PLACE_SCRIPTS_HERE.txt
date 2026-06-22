@@ -1,0 +1,22 @@
+Place required train/play/eval/source scripts here.
+
+Source: See /tmp/bc_policy_copylist.txt.clean and /tmp/bc_policy_needed_files_manifest.txt
+        on the local machine for the exact list of scripts to include.
+
+Relevant scripts for this policy typically include:
+  - train_bc_localtarget.py (or equivalent BC training script)
+  - play_bc_localtarget.py (or equivalent BC play/inference script)
+  - collect_demos.py (data collection script)
+  - eval_bc.py (evaluation script)
+  - Any source modules from source/franka_5cube_stack/ needed to run the above
+
+Do NOT include:
+  - Unrelated PPO or other RL training scripts
+  - Random utility scripts unrelated to this policy
+  - __pycache__/ or *.pyc files
+
+To add from your local machine:
+  cp <script>.py bc_localtarget_antistall_9of50/scripts/
+  git add bc_localtarget_antistall_9of50/scripts/
+  git commit -m "Add BC policy scripts"
+  git push

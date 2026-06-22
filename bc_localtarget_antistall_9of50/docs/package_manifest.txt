@@ -1,0 +1,59 @@
+BC LocalTarget Anti-Stall Policy Package Manifest
+===================================================
+Package:  bc_localtarget_antistall_9of50
+Policy:   bc_rnn_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch
+Created:  2026-06-22
+Author:   altinloshi
+
+DESCRIPTION
+-----------
+Target-conditioned Behavior Cloning (BC) policy for Franka 5-cube stacking.
+Uses RNN policy, LocalTarget representation, anti-stall guard, planner-forced
+discrete gripper, and 7D action space (dx, dy, dz, rx, ry, rz, gripper).
+
+EVALUATION RESULTS
+------------------
+Main eval  (50 runs, 2026-06-19 17:55:28): 9/50 successes = 18%
+  Successful run IDs: 4, 5, 9, 22, 31, 33, 36, 43, 49
+
+Sanity eval (10 runs, 2026-06-19 16:29:50): 2/10 successes = 20%
+  Successful run IDs: 2, 3
+
+DIRECTORY STRUCTURE
+-------------------
+bc_localtarget_antistall_9of50/
+├── policy/
+│   └── best.pt                                         [Git LFS] RNN BC policy checkpoint
+├── datasets/
+│   └── *.hdf5                                          [Git LFS] Training demonstration datasets
+├── scripts/
+│   └── *.py                                            Train/play/eval/source scripts
+├── eval/
+│   ├── localtarget_antistall_50x_eval_20260619_175528/ Main 50-run evaluation logs
+│   │   └── run_0.log ... run_49.log
+│   ├── localtarget_antistall_10x_eval_20260619_162950/ 10-run sanity evaluation logs
+│   │   └── run_0.log ... run_9.log
+│   ├── eval_LOCALTARGET_ANTISTALL_50runs.sh            Script to reproduce 50-run eval
+│   └── eval_LOCALTARGET_ANTISTALL_10runs.sh            Script to reproduce 10-run eval
+├── logs/
+│   └── *.log                                           Training/play/collection logs
+└── docs/
+    ├── package_manifest.txt                            This file
+    ├── file_sources.txt                                Source paths for all files
+    └── git_status_snapshot.txt                         Git status at commit time
+
+EXCLUDED
+--------
+- videos/ (*.mp4, *.webm, *.mov, *.avi) — intentionally not committed
+- __pycache__/, *.pyc — excluded by .gitignore
+- Unrelated old failed runs
+- Random IsaacLab temporary output
+
+GIT LFS
+-------
+The following extensions are tracked via Git LFS:
+  *.pt   — PyTorch model checkpoints
+  *.pth  — PyTorch state dicts
+  *.hdf5 — HDF5 demonstration datasets
+
+See .gitattributes in repo root.
