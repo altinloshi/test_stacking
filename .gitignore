@@ -1,10 +1,25 @@
 __pycache__/
 *.py[cod]
+*.pyc
 *.egg-info/
 dist/
 build/
 .eggs/
 *.so
+.pytest_cache/
 runs/
 videos/
-logs/
+/logs/
+
+# Video files — never commit
+*.mp4
+*.webm
+*.mov
+*.avi
+
+# Do NOT ignore eval and training logs for the BC policy package
+!bc_localtarget_antistall_9of50/eval/**/*.log
+!bc_localtarget_antistall_9of50/eval/**/
+!bc_localtarget_antistall_9of50/logs/**/*.log
+!bc_localtarget_antistall_9of50/logs/**/
+!bc_localtarget_antistall_9of50/
