@@ -17,7 +17,7 @@ videos/
 *.mov
 *.avi
 
-# Do NOT ignore log files inside the BC policy package
+# Log files inside the BC policy package must NOT be ignored
 !bc_localtarget_antistall_9of50/
 !bc_localtarget_antistall_9of50/eval/
 !bc_localtarget_antistall_9of50/eval/**/
