@@ -1,23 +1,48 @@
-# BC LocalTarget Anti-Stall Policy — 9/50 Evaluation
+# BC LocalTarget Anti-Stall Policy — Franka 5-Cube Stacking
 
-**Task:** Franka 5-cube stacking (simulation)  
-**Policy type:** Target-conditioned Behavior Cloning (BC) with RNN  
-**Checkpoint:** `bc_rnn_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch`  
-**Main result:** **9 / 50 successful stacking episodes (18%)**
+This folder contains the reproducibility package for the Franka 5-cube stacking Behavior Cloning policy.
+
+The goal of this package is to let another engineer clone the repository, pull the trained policy and dataset files, inspect the evaluation evidence, and rerun the policy inside a matching IsaacLab environment.
 
 ---
 
-## Policy Description
+## Result Summary
 
-This is a target-conditioned Behavior Cloning policy for Franka 5-cube stacking.
+Policy type:
 
-The working recipe uses:
-- **Target-conditioned BC** — the policy receives the current target cube index as input
-- **LocalTarget representation** — local coordinate frame for the target cube
-- **RNN policy checkpoint** — recurrent network for temporal dependencies
-- **Anti-stall / guard layer** — detects and recovers from gripper stall conditions
-- **Planner-forced discrete gripper** — binary open/close gripper via planner override
-- **7D action space:** `dx, dy, dz, rx, ry, rz, gripper`
+- Target-conditioned Behavior Cloning
+- LocalTarget representation
+- RNN policy checkpoint
+- Anti-stall / guard layer
+- Planner-forced discrete gripper
+- 7D action space: `dx, dy, dz, rx, ry, rz, gripper`
+
+Main evaluation:
+
+- 50 single-env rollouts
+- 9 successful runs
+- 41 failed runs
+- Success rate: 18%
+
+Successful 50-run IDs:
+
+```text
+4, 5, 9, 22, 31, 33, 36, 43, 49
+```
+
+Sanity evaluation (earlier 10-run check):
+
+- 10 single-env rollouts
+- 2 successful runs
+- Success rate: 20%
+
+Successful 10-run IDs:
+
+```text
+2, 3
+```
+
+> Videos are intentionally not committed. Evaluation evidence is preserved as `.log` files only.
 
 ---
 
@@ -26,22 +51,25 @@ The working recipe uses:
 ```
 bc_localtarget_antistall_9of50/
 ├── policy/
-│   └── best.pt                  ← Main RNN BC policy checkpoint (Git LFS)
+│   └── best.pt                    ← Trained RNN BC checkpoint (Git LFS)
 ├── datasets/
-│   └── *.hdf5                   ← Training demonstration datasets (Git LFS)
+│   └── *.hdf5                     ← Demonstration datasets used for training (Git LFS)
 ├── scripts/
-│   └── *.py                     ← Train / play / eval / source scripts
+│   └── *.py                       ← Train / play / eval / source scripts
 ├── eval/
-│   ├── localtarget_antistall_50x_eval_20260619_175528/   ← Main 50-run eval logs
-│   ├── localtarget_antistall_10x_eval_20260619_162950/   ← Sanity 10-run eval logs
+│   ├── localtarget_antistall_50x_eval_20260619_175528/
+│   │   └── run_0.log … run_49.log ← Main 50-run evaluation logs
+│   ├── localtarget_antistall_10x_eval_20260619_162950/
+│   │   └── run_0.log … run_9.log  ← Sanity 10-run evaluation logs
 │   ├── eval_LOCALTARGET_ANTISTALL_50runs.sh
 │   └── eval_LOCALTARGET_ANTISTALL_10runs.sh
 ├── logs/
-│   └── *.log                    ← Training / collection logs
-└── docs/
-    ├── package_manifest.txt
-    ├── file_sources.txt
-    └── git_status_snapshot.txt
+│   └── *.log                      ← Training / collection logs
+├── docs/
+│   ├── package_manifest.txt
+│   ├── file_sources.txt
+│   └── git_status_snapshot.txt
+└── README_BC_9OF50.md             ← This file
 ```
 
 ---
@@ -51,8 +79,9 @@ bc_localtarget_antistall_9of50/
 | Field | Value |
 |-------|-------|
 | File | `bc_localtarget_antistall_9of50/policy/best.pt` |
-| Source | `IsaacLab/logs/bc_detector_expert/bc_rnn_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch/best.pt` |
-| Format | PyTorch checkpoint (tracked via Git LFS) |
+| Original path | `IsaacLab/logs/bc_detector_expert/bc_rnn_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch/best.pt` |
+| Format | PyTorch checkpoint |
+| Git tracking | LFS (`*.pt`) |
 
 ---
 
@@ -60,7 +89,7 @@ bc_localtarget_antistall_9of50/
 
 Located in `bc_localtarget_antistall_9of50/datasets/`.
 
-All `.hdf5` files are tracked via Git LFS. These are the demonstration datasets used to train the 60-demo target-conditioned BC policy.
+These are the HDF5 demonstration files used to train the 60-demo target-conditioned BC policy. All `.hdf5` files are tracked via Git LFS.
 
 ---
 
@@ -68,48 +97,47 @@ All `.hdf5` files are tracked via Git LFS. These are the demonstration datasets 
 
 Located in `bc_localtarget_antistall_9of50/scripts/`.
 
-Includes the required train / play / eval / source scripts for this policy.
+Contains the required train, play, and evaluation scripts for this policy. Do not add unrelated RL or PPO scripts to this folder.
 
 ---
 
-## Evaluation Results
+## Evaluation Logs
 
-### Main Evaluation — 50 runs (2026-06-19 17:55:28)
+### Main evaluation — 50 runs
+
+Directory: `bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/`
 
 | Metric | Value |
 |--------|-------|
 | Total runs | 50 |
-| **Successful runs** | **9** |
-| **Success rate** | **18%** |
+| Successful runs | **9** |
+| Failed runs | 41 |
+| Success rate | **18%** |
 | Successful run IDs | 4, 5, 9, 22, 31, 33, 36, 43, 49 |
 
-Logs: `bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/`
+### Sanity evaluation — 10 runs
 
-### Sanity Evaluation — 10 runs (2026-06-19 16:29:50)
+Directory: `bc_localtarget_antistall_9of50/eval/localtarget_antistall_10x_eval_20260619_162950/`
 
 | Metric | Value |
 |--------|-------|
 | Total runs | 10 |
-| **Successful runs** | **2** |
-| **Success rate** | **20%** |
+| Successful runs | **2** |
+| Failed runs | 8 |
+| Success rate | **20%** |
 | Successful run IDs | 2, 3 |
-
-Logs: `bc_localtarget_antistall_9of50/eval/localtarget_antistall_10x_eval_20260619_162950/`
-
-> **Note:** Videos are intentionally not committed to this repository.
-> The evaluation evidence is preserved as `.log` files only.
 
 ---
 
 ## How to Count Successes
 
-Count successful runs in the main 50-run evaluation:
+Count successes in the main 50-run evaluation:
 
 ```bash
 grep -R "FINAL PHYSICAL STACK SUCCESS=True" bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_*.log | wc -l
 ```
 
-Count failed runs:
+Count failures:
 
 ```bash
 grep -R "FINAL PHYSICAL STACK SUCCESS=False" bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_*.log | wc -l
@@ -125,9 +153,9 @@ grep -Rl "FINAL PHYSICAL STACK SUCCESS=True" bc_localtarget_antistall_9of50/eval
 
 ---
 
-## Inspect Successful Logs
+## Inspect a Successful Log
 
-Inspect key events in a successful run (e.g., run 4):
+Inspect key events in run 4 (successful):
 
 ```bash
 grep -n "FINAL PHYSICAL STACK SUCCESS\|TARGET BC STEP\|guard=\|xy_gap\|z_gap" bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_4.log | tail -120
@@ -135,15 +163,15 @@ grep -n "FINAL PHYSICAL STACK SUCCESS\|TARGET BC STEP\|guard=\|xy_gap\|z_gap" bc
 
 ---
 
-## Reproduce Evaluation
+## Reproduce the Evaluation
 
-Run 50-episode evaluation:
+Run the 50-episode evaluation:
 
 ```bash
 bash bc_localtarget_antistall_9of50/eval/eval_LOCALTARGET_ANTISTALL_50runs.sh
 ```
 
-Run 10-episode sanity evaluation:
+Run the 10-episode sanity evaluation:
 
 ```bash
 bash bc_localtarget_antistall_9of50/eval/eval_LOCALTARGET_ANTISTALL_10runs.sh
@@ -153,7 +181,13 @@ bash bc_localtarget_antistall_9of50/eval/eval_LOCALTARGET_ANTISTALL_10runs.sh
 
 ## Git LFS
 
-Large binary files are tracked via Git LFS:
+Large binary files are tracked via Git LFS. To pull them after cloning:
+
+```bash
+git lfs pull
+```
+
+Tracked extensions:
 
 | Pattern | Type |
 |---------|------|
@@ -161,7 +195,7 @@ Large binary files are tracked via Git LFS:
 | `*.pth` | PyTorch state dicts |
 | `*.hdf5` | HDF5 demonstration datasets |
 
-To verify LFS-tracked files:
+Verify LFS-tracked files:
 
 ```bash
 git lfs ls-files
@@ -172,6 +206,6 @@ git lfs ls-files
 ## Notes
 
 - Videos are **intentionally not committed**. Evaluation evidence is log-based only.
-- The anti-stall guard is a key component that distinguishes this working recipe from earlier failed attempts.
-- The planner-forced discrete gripper (binary open/close) was critical for reliable stacking.
-- Successful runs: 4, 5, 9, 22, 31, 33, 36, 43, 49 (main eval); 2, 3 (sanity eval).
+- The anti-stall guard is the key component that distinguishes this working recipe from earlier failed attempts.
+- The planner-forced discrete gripper (binary open/close) was critical for reliable stacking behaviour.
+- Earlier attempts without LocalTarget or anti-stall failed to achieve consistent success.
