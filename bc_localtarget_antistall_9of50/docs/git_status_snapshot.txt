@@ -1,16 +1,16 @@
 Git Status Snapshot — BC LocalTarget Anti-Stall Policy Package
 ===============================================================
-Branch:   cursor/bc-localtarget-antistall-9of50-e6b7
+Branch:   cursor/bc-repro-readme-commands-b44c
 Base:     main
 Repo:     https://github.com/altinloshi/test_stacking
 Date:     2026-06-22
 
-NOTE: This snapshot reflects the initial package scaffold committed by the
-cloud agent. Binary files (best.pt, *.hdf5) and evaluation log files
-(run_*.log) must be added from the local machine via Git LFS.
+NOTE: This snapshot reflects the current package scaffold.
+Binary files (best.pt, *.hdf5) and evaluation log files (run_*.log)
+must be added from the local machine via Git LFS.
 
-PACKAGE CONTENTS AT INITIAL COMMIT
-------------------------------------
+PACKAGE CONTENTS IN REPO (scaffold only)
+------------------------------------------
 bc_localtarget_antistall_9of50/
   policy/
     PLACE_BEST_PT_HERE.txt          [placeholder — replace with best.pt via LFS]
@@ -19,8 +19,8 @@ bc_localtarget_antistall_9of50/
   scripts/
     PLACE_SCRIPTS_HERE.txt          [placeholder — add train/play/eval scripts]
   eval/
-    eval_LOCALTARGET_ANTISTALL_50runs.sh
-    eval_LOCALTARGET_ANTISTALL_10runs.sh
+    eval_LOCALTARGET_ANTISTALL_50runs.sh      [committed]
+    eval_LOCALTARGET_ANTISTALL_10runs.sh      [committed]
     localtarget_antistall_50x_eval_20260619_175528/
       PLACE_RUN_LOGS_HERE.txt       [placeholder — add run_0.log...run_49.log]
     localtarget_antistall_10x_eval_20260619_162950/
@@ -28,28 +28,42 @@ bc_localtarget_antistall_9of50/
   logs/
     PLACE_TRAINING_LOGS_HERE.txt    [placeholder — add training logs]
   docs/
-    package_manifest.txt
-    file_sources.txt
+    package_manifest.txt            [committed]
+    file_sources.txt                [committed]
     git_status_snapshot.txt         [this file]
-README_BC_9OF50.md
+    environment_expected.md         [committed]
+README_BC_9OF50.md                  [committed]
 
-LFS FILES EXPECTED (not yet present)
---------------------------------------
+LFS FILES EXPECTED (must be added from local machine)
+------------------------------------------------------
   bc_localtarget_antistall_9of50/policy/best.pt
   bc_localtarget_antistall_9of50/datasets/*.hdf5
+
+LOG FILES EXPECTED (must be added from local machine)
+------------------------------------------------------
+  bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_*.log (50 files)
+  bc_localtarget_antistall_9of50/eval/localtarget_antistall_10x_eval_20260619_162950/run_*.log (10 files)
+  bc_localtarget_antistall_9of50/logs/*.log (optional training logs)
 
 GIT LFS CONFIGURATION
 ----------------------
 .gitattributes:
-  *.pt filter=lfs diff=lfs merge=lfs -text
-  *.pth filter=lfs diff=lfs merge=lfs -text
+  *.pt   filter=lfs diff=lfs merge=lfs -text
+  *.pth  filter=lfs diff=lfs merge=lfs -text
   *.hdf5 filter=lfs diff=lfs merge=lfs -text
 
 AFTER ADDING ALL DATA FILES, verify with:
   git lfs ls-files
+
+  # Verify success count (expected: 9):
   grep -R "FINAL PHYSICAL STACK SUCCESS=True" \
     bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_*.log \
     | wc -l
-  # Expected: 9
 
+  # Verify failure count (expected: 41):
+  grep -R "FINAL PHYSICAL STACK SUCCESS=False" \
+    bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_*.log \
+    | wc -l
+
+  # List all files in package:
   find bc_localtarget_antistall_9of50 -maxdepth 5 -type f | sort

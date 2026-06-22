@@ -4,6 +4,7 @@ Package:  bc_localtarget_antistall_9of50
 Policy:   bc_rnn_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch
 Created:  2026-06-22
 Author:   altinloshi
+Repo:     https://github.com/altinloshi/test_stacking
 
 DESCRIPTION
 -----------
@@ -11,43 +12,110 @@ Target-conditioned Behavior Cloning (BC) policy for Franka 5-cube stacking.
 Uses RNN policy, LocalTarget representation, anti-stall guard, planner-forced
 discrete gripper, and 7D action space (dx, dy, dz, rx, ry, rz, gripper).
 
+This is a Stage A/B prototype:
+  Stage A: HDF5 demos from scripted StackPlanner / expert controller
+  Stage B: target-conditioned BC RNN with LocalTarget + anti-stall guard
+  Stage C: RL fine-tuning — NOT completed
+
 EVALUATION RESULTS
 ------------------
 Main eval  (50 runs, 2026-06-19 17:55:28): 9/50 successes = 18%
   Successful run IDs: 4, 5, 9, 22, 31, 33, 36, 43, 49
+  Failed run count: 41
 
 Sanity eval (10 runs, 2026-06-19 16:29:50): 2/10 successes = 20%
   Successful run IDs: 2, 3
 
-DIRECTORY STRUCTURE
--------------------
-bc_localtarget_antistall_9of50/
-├── policy/
-│   └── best.pt                                         [Git LFS] RNN BC policy checkpoint
-├── datasets/
-│   └── *.hdf5                                          [Git LFS] Training demonstration datasets
-├── scripts/
-│   └── *.py                                            Train/play/eval/source scripts
-├── eval/
-│   ├── localtarget_antistall_50x_eval_20260619_175528/ Main 50-run evaluation logs
-│   │   └── run_0.log ... run_49.log
-│   ├── localtarget_antistall_10x_eval_20260619_162950/ 10-run sanity evaluation logs
-│   │   └── run_0.log ... run_9.log
-│   ├── eval_LOCALTARGET_ANTISTALL_50runs.sh            Script to reproduce 50-run eval
-│   └── eval_LOCALTARGET_ANTISTALL_10runs.sh            Script to reproduce 10-run eval
-├── logs/
-│   └── *.log                                           Training/play/collection logs
-└── docs/
-    ├── package_manifest.txt                            This file
-    ├── file_sources.txt                                Source paths for all files
-    └── git_status_snapshot.txt                         Git status at commit time
+SUCCESS VERIFICATION COMMANDS
+------------------------------
+# Count successes (expected: 9):
+grep -R "FINAL PHYSICAL STACK SUCCESS=True" \
+  bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_*.log \
+  | wc -l
+
+# Count failures (expected: 41):
+grep -R "FINAL PHYSICAL STACK SUCCESS=False" \
+  bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_*.log \
+  | wc -l
+
+# List successful run files (expected: run_4.log, run_5.log, run_9.log, run_22.log,
+#                                       run_31.log, run_33.log, run_36.log, run_43.log, run_49.log):
+grep -Rl "FINAL PHYSICAL STACK SUCCESS=True" \
+  bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/run_*.log \
+  | sort
+
+POLICY FILES
+------------
+bc_localtarget_antistall_9of50/policy/best.pt
+  Status:  Must be added from local machine via Git LFS
+  Source:  /home/a0loshi1/robotics/IsaacLab/logs/bc_detector_expert/
+           bc_rnn_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch/best.pt
+  LFS:     *.pt tracked in .gitattributes
+  Add:     cp <source>/best.pt bc_localtarget_antistall_9of50/policy/best.pt
+           git add bc_localtarget_antistall_9of50/policy/best.pt
+           git commit -m "Add BC policy checkpoint best.pt via LFS"
+           git push
+
+DATASET FILES
+-------------
+bc_localtarget_antistall_9of50/datasets/*.hdf5
+  Status:  Must be added from local machine via Git LFS
+  Sources: /home/a0loshi1/robotics/IsaacLab/datasets/ (TARGET_CONDITIONED, LOCALTARGET,
+           policyobs, rgbd, stack_demos, robomimic-related)
+  LFS:     *.hdf5 tracked in .gitattributes
+  Add:     cp <dataset>.hdf5 bc_localtarget_antistall_9of50/datasets/
+           git add bc_localtarget_antistall_9of50/datasets/*.hdf5
+           git commit -m "Add BC training datasets via LFS"
+           git push
+
+SCRIPTS
+-------
+bc_localtarget_antistall_9of50/scripts/
+  Required scripts (copy from IsaacLab custom scripts directory):
+    play_bc_rnn_target_conditioned.py       Main play/eval script
+    train_bc_rnn_target_conditioned.py      Training script
+    run_5cube_camera_hierarchical_success_fixed.py  Demo collection
+    localtarget_*.py                        LocalTarget representation modules
+    antistall_*.py                          Anti-stall guard modules
+    hdf5_*.py                               HDF5 collection/conversion/audit scripts
+    Any source registration files for Isaac-Stack-5Cube-Franka-IK-Rel-v0
+
+EVAL LOGS
+---------
+bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/
+  Expected: run_0.log through run_49.log (50 files)
+  Status:   Must be added from /tmp/localtarget_antistall_50x_eval_20260619_175528/
+  Results:  9 successes — run IDs: 4, 5, 9, 22, 31, 33, 36, 43, 49
+
+bc_localtarget_antistall_9of50/eval/localtarget_antistall_10x_eval_20260619_162950/
+  Expected: run_0.log through run_9.log (10 files)
+  Status:   Must be added from /tmp/localtarget_antistall_10x_eval_20260619_162950/
+  Results:  2 successes — run IDs: 2, 3
+
+TRAINING LOGS
+-------------
+bc_localtarget_antistall_9of50/logs/
+  Key logs to add (from /tmp/ on local machine):
+    train_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch.log
+    play_TARGET_CONDITIONED_LOCALTARGET_700_antistall.log
+    play_TARGET_CONDITIONED_LOCALTARGET_700.log
+    collect_TARGET_CONDITIONED_BC_50env_700steps.log
+
+DOCS (generated)
+----------------
+bc_localtarget_antistall_9of50/docs/
+  package_manifest.txt       — This file
+  file_sources.txt           — Source paths for all copied files
+  git_status_snapshot.txt    — Git status at commit time
+  environment_expected.md    — Expected environment for reproduction
 
 EXCLUDED
 --------
-- videos/ (*.mp4, *.webm, *.mov, *.avi) — intentionally not committed
+- Videos (*.mp4, *.webm, *.mov, *.avi) — intentionally not committed
 - __pycache__/, *.pyc — excluded by .gitignore
-- Unrelated old failed runs
+- Unrelated old failed experiments
 - Random IsaacLab temporary output
+- Stage C RL fine-tuning scripts (not completed)
 
 GIT LFS
 -------
@@ -57,3 +125,11 @@ The following extensions are tracked via Git LFS:
   *.hdf5 — HDF5 demonstration datasets
 
 See .gitattributes in repo root.
+Verify with: git lfs ls-files
+
+NOTES
+-----
+- Successful run IDs (main eval): 4, 5, 9, 22, 31, 33, 36, 43, 49
+- Successful run IDs (sanity eval): 2, 3
+- The anti-stall guard is a critical component for reliable stacking
+- The planner-forced discrete gripper (binary open/close) was key to this result

@@ -3,8 +3,8 @@ BC LocalTarget Anti-Stall Policy — File Sources
 Package:  bc_localtarget_antistall_9of50
 Created:  2026-06-22
 
-This file documents the source paths for all files in the package,
-as they existed on the local machine (a0loshi1@...) at package creation time.
+This file documents the source paths for all files in this package,
+as they exist on the local machine (a0loshi1@...) at package creation time.
 
 POLICY CHECKPOINT
 -----------------
@@ -12,21 +12,52 @@ Destination:  bc_localtarget_antistall_9of50/policy/best.pt
 Source:       /home/a0loshi1/robotics/IsaacLab/logs/bc_detector_expert/
               bc_rnn_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch/best.pt
 LFS:          Yes (*.pt)
+Copy command:
+  cp /home/a0loshi1/robotics/IsaacLab/logs/bc_detector_expert/bc_rnn_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch/best.pt \
+     bc_localtarget_antistall_9of50/policy/best.pt
 
 DATASETS
 --------
 Destination:  bc_localtarget_antistall_9of50/datasets/*.hdf5
-Source:       See /tmp/bc_policy_copylist.txt.clean on local machine
-              (relevant .hdf5 files from the 60-demo training dataset)
+Source dirs:  /home/a0loshi1/robotics/IsaacLab/datasets/
+              /home/a0loshi1/robotics/task-franka-cubestack-base/datasets/
+Relevant patterns:
+  - *TARGET_CONDITIONED*
+  - *LOCALTARGET*
+  - *policyobs*
+  - *rgbd*
+  - *stack_demos*
+  - *robomimic*
 LFS:          Yes (*.hdf5)
+Copy commands:
+  cp <source>/*TARGET_CONDITIONED*.hdf5 bc_localtarget_antistall_9of50/datasets/
+  cp <source>/*LOCALTARGET*.hdf5        bc_localtarget_antistall_9of50/datasets/
+  git add bc_localtarget_antistall_9of50/datasets/*.hdf5
+  git commit -m "Add BC training datasets via LFS"
+  git push
 
 SCRIPTS
 -------
 Destination:  bc_localtarget_antistall_9of50/scripts/
-Source:       See /tmp/bc_policy_needed_files_manifest.txt on local machine
-              Typically from:
-                /home/a0loshi1/robotics/IsaacLab/scripts/bc/
-                /home/a0loshi1/robotics/IsaacLab/source/
+Source dirs:  /home/a0loshi1/robotics/IsaacLab/scripts/custom/
+              /home/a0loshi1/robotics/IsaacLab/source/
+              /home/a0loshi1/robotics/task-franka-cubestack-base/scripts/
+              /home/a0loshi1/robotics/task-franka-cubestack-base/source/
+Required files:
+  play_bc_rnn_target_conditioned.py       — play/eval script
+  train_bc_rnn_target_conditioned.py      — training script
+  run_5cube_camera_hierarchical_success_fixed.py — demo collection
+  localtarget_*.py                        — LocalTarget representation modules
+  antistall_*.py                          — anti-stall guard modules
+  hdf5_*.py                               — HDF5 utilities
+  franka_5cube_stack source package files — task registration for Isaac-Stack-5Cube-Franka-IK-Rel-v0
+Copy commands:
+  cp /home/a0loshi1/robotics/IsaacLab/scripts/custom/play_bc_rnn_target_conditioned.py \
+     bc_localtarget_antistall_9of50/scripts/
+  cp /home/a0loshi1/robotics/IsaacLab/scripts/custom/train_bc_rnn_target_conditioned.py \
+     bc_localtarget_antistall_9of50/scripts/
+  cp /home/a0loshi1/robotics/IsaacLab/scripts/custom/run_5cube_camera_hierarchical_success_fixed.py \
+     bc_localtarget_antistall_9of50/scripts/
 
 EVALUATION LOGS (MAIN — 50 runs)
 ---------------------------------
@@ -34,6 +65,12 @@ Destination:  bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval
 Source:       /tmp/localtarget_antistall_50x_eval_20260619_175528/run_*.log
 Count:        50 log files (run_0.log through run_49.log)
 Results:      9 successes (run IDs: 4, 5, 9, 22, 31, 33, 36, 43, 49)
+Copy command:
+  cp -r /tmp/localtarget_antistall_50x_eval_20260619_175528/ \
+     bc_localtarget_antistall_9of50/eval/
+  git add bc_localtarget_antistall_9of50/eval/localtarget_antistall_50x_eval_20260619_175528/
+  git commit -m "Add main 50-run evaluation logs (9/50 successes)"
+  git push
 
 EVALUATION LOGS (SANITY — 10 runs)
 ------------------------------------
@@ -41,27 +78,47 @@ Destination:  bc_localtarget_antistall_9of50/eval/localtarget_antistall_10x_eval
 Source:       /tmp/localtarget_antistall_10x_eval_20260619_162950/run_*.log
 Count:        10 log files (run_0.log through run_9.log)
 Results:      2 successes (run IDs: 2, 3)
+Copy command:
+  cp -r /tmp/localtarget_antistall_10x_eval_20260619_162950/ \
+     bc_localtarget_antistall_9of50/eval/
+  git add bc_localtarget_antistall_9of50/eval/localtarget_antistall_10x_eval_20260619_162950/
+  git commit -m "Add sanity 10-run evaluation logs (2/10 successes)"
+  git push
 
 TRAINING LOGS
 -------------
 Destination:  bc_localtarget_antistall_9of50/logs/
-Source:       See /tmp/bc_policy_copylist.txt.clean on local machine
-              Typically from IsaacLab training run output directory
+Possible sources (from /tmp/ on local machine):
+  /tmp/train_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch.log
+  /tmp/train_TARGET_CONDITIONED_60demos_30epoch.log
+  /tmp/train_TARGET_CONDITIONED_TEST_SMOKE.log
+  /tmp/play_TARGET_CONDITIONED_LOCALTARGET_700_antistall.log
+  /tmp/play_TARGET_CONDITIONED_LOCALTARGET_700.log
+  /tmp/play_TARGET_CONDITIONED_LOCALTARGET_300.log
+  /tmp/compare_bc_vs_expert_live_20_epoch80.log
+  /tmp/bc_rnn_policyobs_rgbd_20.log
+  /tmp/collect_TARGET_CONDITIONED_BC_50env_700steps.log
+  /tmp/collect_TARGET_BC_batch02.log
+  /tmp/collect_TARGET_BC_batch03.log
+Copy command (only copy if files exist):
+  for f in \
+    /tmp/train_TARGET_CONDITIONED_LOCALTARGET_60demos_20epoch.log \
+    /tmp/play_TARGET_CONDITIONED_LOCALTARGET_700_antistall.log \
+    /tmp/collect_TARGET_CONDITIONED_BC_50env_700steps.log; do
+    [ -f "$f" ] && cp "$f" bc_localtarget_antistall_9of50/logs/
+  done
+  git add bc_localtarget_antistall_9of50/logs/*.log
+  git commit -m "Add training and collection logs"
+  git push
 
-EVAL SCRIPTS (generated)
--------------------------
-Destination:  bc_localtarget_antistall_9of50/eval/eval_LOCALTARGET_ANTISTALL_50runs.sh
-Destination:  bc_localtarget_antistall_9of50/eval/eval_LOCALTARGET_ANTISTALL_10runs.sh
-Source:       Generated by cloud agent for reproducibility
+EVAL SCRIPTS (repo-generated)
+------------------------------
+bc_localtarget_antistall_9of50/eval/eval_LOCALTARGET_ANTISTALL_50runs.sh — in repo
+bc_localtarget_antistall_9of50/eval/eval_LOCALTARGET_ANTISTALL_10runs.sh — in repo
 
-DOCS (generated)
-----------------
-Destination:  bc_localtarget_antistall_9of50/docs/
-Source:       Generated by cloud agent based on task specification
-
-MANIFEST REFERENCES
---------------------
-The two source-of-truth files referenced at package creation time:
-  /tmp/bc_policy_needed_files_manifest.txt
-  /tmp/bc_policy_copylist.txt.clean
-These files are on the local machine and were not committed to the repo.
+DOCS (repo-generated)
+---------------------
+bc_localtarget_antistall_9of50/docs/package_manifest.txt    — in repo
+bc_localtarget_antistall_9of50/docs/file_sources.txt        — this file
+bc_localtarget_antistall_9of50/docs/git_status_snapshot.txt — in repo
+bc_localtarget_antistall_9of50/docs/environment_expected.md — in repo
